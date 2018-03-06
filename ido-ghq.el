@@ -3,8 +3,9 @@
 ;; Copyright (C) 2010-2018 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 ;; Author: Youhei SASAKI <uwabami@gfd-dennou.org>
-;; $Lastupdate: 2018-03-06 22:53:37$
+;; $Lastupdate: 2018-03-06 23:05:37$
 ;; Version: 0.0.1
+;; Package-Version: 20180306.2253
 ;; Package-Requires: nil
 ;; Keywords: tools
 ;; URL: https://github.com/uwabami/ido-ghq
@@ -32,7 +33,7 @@
 
 ;;; Code:
 
-(defgroup ido-ghq
+(defgroup ido-ghq nil
   "ghq with ido interface"
   :prefix "ido-ghq-"
   :group 'ido)
@@ -43,19 +44,18 @@
   :type 'string
   :group 'ido-ghq)
 
-(defcustom ido-ghq-command-ghq-arg-root
+(defcustom ido-ghq-command-arg-root
   '("root")
   "*Arguments for getting ghq root path using ghq command"
   :type '(repeqt string)
   :group 'ido-ghq)
 
-(defcustom ido-ghq-command-ghq-arg-list
+(defcustom ido-ghq-command-arg-list
   '("list" "--full-path")
   "*Arguments for getting ghq list"
   :type '(repeqt string)
   :group 'ido-ghq)
 
-;;
 (defun ido-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -63,7 +63,7 @@
   (with-temp-buffer
     (unless (zerop (apply #'call-process
                           ido-ghq-command nil t nil
-                          ido-ghq-command-ghq-arg-list))
+                          ido-ghq-command-arg-list))
       (error "Failed: Can't get ghq list candidates"))
     (let ((paths))
       (goto-char (point-min))
@@ -78,9 +78,11 @@
 (defun ido-ghq-open ()
   "Use `ido-completing-read' to \\[dired] a ghq list"
   (interactive)
-  (ido-ghq--open-dired
-   (ido-completing-read "Find ghq repo.: "
-                        (my:ghq--list-candidates))))
+  (if (dired (file-name-directory
+              (ido-completing-read "Find ghq repo.: "
+                                   (ido-ghq--list-candidates))))
+      (message "Open ghq repository")
+    (message "Abort")))
 
 
 ;;; ido-ghq.el ends here
