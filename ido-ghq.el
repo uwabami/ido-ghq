@@ -84,5 +84,5 @@
       (message "Open ghq repository")
     (message "Abort")))
 
-
+(provide 'ido-ghq)
 ;;; ido-ghq.el ends here
