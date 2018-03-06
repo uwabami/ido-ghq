@@ -1,12 +1,10 @@
-;;; ido-ghq.el -- ghq with ido -- -*- lexical-binding: t; -*-
+;;; ido-ghq.el --- ghq with ido -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2010-2018 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 ;; Author: Youhei SASAKI <uwabami@gfd-dennou.org>
-;; Created: 2015-12-10 08:09:00 +0900
-;; Updated: 2018-03-06 17:09:47 +0900
+;; $Lastupdate: 2018-03-06 22:51:41$
 ;; Version: 0.0.1
-;; Package-Version: 20180306.170947
 ;; Package-Requires: nil
 ;; Keywords: tools
 ;; URL: https://github.com/uwabami/ido-ghq
