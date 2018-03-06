@@ -3,7 +3,7 @@
 ;; Copyright (C) 2010-2018 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 ;; Author: Youhei SASAKI <uwabami@gfd-dennou.org>
-;; $Lastupdate: 2018-03-06 22:51:41$
+;; $Lastupdate: 2018-03-06 22:53:37$
 ;; Version: 0.0.1
 ;; Package-Requires: nil
 ;; Keywords: tools
@@ -79,7 +79,7 @@
   "Use `ido-completing-read' to \\[dired] a ghq list"
   (interactive)
   (ido-ghq--open-dired
-   (ido-completing-read "Find recent file: "
+   (ido-completing-read "Find ghq repo.: "
                         (my:ghq--list-candidates))))
 
 
