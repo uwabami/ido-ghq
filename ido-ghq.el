@@ -3,9 +3,8 @@
 ;; Copyright (C) 2010-2018 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 ;; Author: Youhei SASAKI <uwabami@gfd-dennou.org>
-;; $Lastupdate: 2018-03-06 23:05:37$
+;; $Lastupdate: 2018-03-06 23:29:29$
 ;; Version: 0.0.1
-;; Package-Version: 20180306.2253
 ;; Package-Requires: nil
 ;; Keywords: tools
 ;; URL: https://github.com/uwabami/ido-ghq
