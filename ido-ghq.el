@@ -3,8 +3,8 @@
 ;; Copyright (C) 2010-2018 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 ;; Author: Youhei SASAKI <uwabami@gfd-dennou.org>
-;; $Lastupdate: 2018-03-06 23:29:29$
-;; Version: 0.0.1
+;; $Lastupdate: 2018-03-07 02:04:09$
+;; Version: 0.0.2
 ;; Package-Requires: nil
 ;; Keywords: tools
 ;; URL: https://github.com/uwabami/ido-ghq
@@ -39,7 +39,7 @@
 
 (defcustom ido-ghq-command
   "ghq"
-  "ghq command"
+  "*A ghq command"
   :type 'string
   :group 'ido-ghq)
 
@@ -49,27 +49,45 @@
   :type '(repeqt string)
   :group 'ido-ghq)
 
-(defcustom ido-ghq-command-arg-list
-  '("list" "--full-path")
-  "*Arguments for getting ghq list"
-  :type '(repeqt string)
+(defcustom ido-ghq-short-list nil
+  "*Whether display full path or short path"
+  :type 'boolean
   :group 'ido-ghq)
 
+(defun ido-ghq--command-arg-list ()
+  (if ido-ghq-short-list
+      '("list")
+    '("list" "--full-path")))
+
 (defun ido-ghq--open-dired (file)
-  (dired (file-name-directory file)))
+  (dired
+   (if ido-ghq-short-list
+       (format "%s%s" (ido-ghq--get-root) file)
+     (format "%s" file))))
+
+(defun ido-ghq--get-root ()
+  (with-temp-buffer
+    (unless (zerop (apply #'call-process
+                          ido-ghq-command nil t nil
+                          ido-ghq-command-arg-root))
+      (error "Failed: Can't get ghq's root"))
+    (replace-regexp-in-string "\n+$" "/"
+                              (buffer-substring-no-properties
+                               (goto-char (point-min))(goto-char (point-max))))))
 
 (defun ido-ghq--list-candidates ()
   (with-temp-buffer
     (unless (zerop (apply #'call-process
                           ido-ghq-command nil t nil
-                          ido-ghq-command-arg-list))
+                          (ido-ghq--command-arg-list)))
       (error "Failed: Can't get ghq list candidates"))
     (let ((paths))
       (goto-char (point-min))
       (while (not (eobp))
         (push
          (buffer-substring-no-properties
-          (line-beginning-position) (line-end-position)) paths)
+          (line-beginning-position) (line-end-position))
+         paths)
         (forward-line 1))
       (reverse paths))))
 
@@ -77,11 +95,10 @@
 (defun ido-ghq-open ()
   "Use `ido-completing-read' to \\[dired] a ghq list"
   (interactive)
-  (if (dired (file-name-directory
-              (ido-completing-read "Find ghq repo.: "
+  (let ((path (ido-completing-read "Find ghq repo.: "
                                    (ido-ghq--list-candidates))))
-      (message "Open ghq repository")
-    (message "Abort")))
+    (if (ido-ghq--open-dired path)
+        (message (format "Open ghq repository: %s" path)))))
 
 (provide 'ido-ghq)
 ;;; ido-ghq.el ends here
